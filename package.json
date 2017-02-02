@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./node_modules/babel-cli/bin/babel-node.js server/server.js",
+    "start": "node node_modules/babel-cli/bin/babel-node.js server/server.js",
     "watch": "nodemon --exec 'npm run start'"
   },
   "engines": {

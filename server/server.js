@@ -3,6 +3,8 @@ import http       from 'http';
 import express    from 'express';
 import socketIO   from 'socket.io';
 
+import {generateMessage} from './utils/message';
+
 const port = process.env.PORT || 3000;
 const publicPath = path.join(__dirname, '../public');
 var app     = express();
@@ -14,13 +16,14 @@ app.use(express.static(publicPath));
 io.on('connection', (socket) => {
   console.log('New user connected');
 
-  socket.on('createMessage', (message) => {
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
+
+  socket.on('createMessage', (message, callback) => {
     console.log('Message created', message);
-    io.emit('newMessage', {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date().getTime()
-    });
+
+    io.emit('newMessage', generateMessage(message.from, message.text));
+    callback('This is from the server.'); // to acknowledge we got request
   });
 
   socket.on('disconnect', () => {
